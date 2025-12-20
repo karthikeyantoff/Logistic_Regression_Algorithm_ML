@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <center>
+<head>
+    <title>House Price Predictor</title>
+</head>
+<body>
+    <h1>SmartHome AI</h1>
+
+    <form method="post">
+        <label>Median Income:</label><br>
+        <input type="number" step="0.1" name="income" required><br><br>
+
+        <label>House Age:</label><br>
+        <input type="number" name="age" required><br><br>
+
+        <label>Total Rooms:</label><br>
+        <input type="number" name="rooms" required><br><br>
+
+        <button type="submit">Predict Price</button>
+    </form>
+
+    {% if price %}
+        <h2>Estimated House Value:</h2>
+        <h3>${{ "{:,.2f}".format(price) }}</h3>
+    {% endif %}
+</body>
+    </center>
+</html>
