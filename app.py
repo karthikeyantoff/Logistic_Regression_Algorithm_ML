@@ -1,28 +1,34 @@
 from flask import Flask, render_template, request
 import joblib
-import pandas as pd
 
 app = Flask(__name__)
 
-# Load model
-model = joblib.load("house_model.pkl")
+# Load your trained model
+# Make sure you ran train.py first to create this file!
+model = joblib.load("placement_model.pkl")
 
 @app.route("/", methods=["GET", "POST"])
 def home():
-    price = None
+    result = ""
+    
     if request.method == "POST":
-        income = float(request.form["income"])
-        age = float(request.form["age"])
-        rooms = float(request.form["rooms"])
-        user_data = pd.DataFrame([[
-            -118.0, 34.0, age, rooms, 100.0, 800.0, 300.0, income, 0
-        ]], columns=[
-            'longitude', 'latitude', 'housing_median_age',
-            'total_rooms', 'total_bedrooms',
-            'population', 'households',
-            'median_income', 'ocean_proximity'
-        ])
-        price = model.predict(user_data)[0]
-    return render_template("index.html", price=price)
+        try:
+            # 1. Get Input
+            cgpa = float(request.form["cgpa"])
+            
+            # 2. Predict (0 = Not Placed, 1 = Placed)
+            prediction = model.predict([[cgpa]])[0]
+            
+            # 3. Show Message
+            if prediction == 1:
+                result = "You are PLACED!"
+            else:
+                result = "You are NOT Placed."
+                
+        except:
+            result = "Error: Please check your input."
+
+    return render_template("index.html", result=result)
+
 if __name__ == "__main__":
     app.run(debug=True)
